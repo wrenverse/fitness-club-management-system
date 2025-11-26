@@ -1,0 +1,9 @@
+# Compiled files
+bin/
+*.jar
+
+# VS Code files
+.vscode/*
+
+# Exclude
+!lib/*
