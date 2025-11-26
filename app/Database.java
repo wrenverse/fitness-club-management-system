@@ -19,16 +19,13 @@ public class Database {
                 this.conn = conn;
                 return true;
             }
-            Terminal.database("Failed to connect database.");
-        } catch (ClassNotFoundException | SQLException e) {
-            // Catch any exceptions thrown by the driver.
-            Terminal.error("Exception thrown by the PostgreSQL JDBC driver.");
-            Terminal.error("Printing stack trace...");
-            System.out.println();
-            e.printStackTrace();
-            System.out.println();
+            
+        } catch (ClassNotFoundException e) {
+            Terminal.error("Failed to load the PostgreSQL JDBC driver.");
             Terminal.error("Exiting app.");
             System.exit(0);
+        } catch (SQLException e) {
+            Terminal.error("Incorrect login credentials.");
         }
         return false;
     }
