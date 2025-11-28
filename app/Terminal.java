@@ -16,7 +16,7 @@ public class Terminal {
         System.out.println("[" + ANSI_YELLOW + "PROGRAM" + ANSI_RESET + "]: " + msg);
     }
 
-    // Output an error terminal mesage.
+    // Output an error terminal message.
     public static void error(String msg) {
         System.out.println("[" + ANSI_RED + "ERROR" + ANSI_RESET + "]: " + msg);
     }
@@ -24,6 +24,16 @@ public class Terminal {
     // Output a database terminal message.
     public static void database(String msg) {
         System.out.println("[" + ANSI_PURPLE + "DATABASE" + ANSI_RESET + "]: " + msg);
+    }
+
+    // Output an exception message.
+    public static void exception(Exception e) {
+        System.out.println(
+            "[" + ANSI_RED + "ERROR" + ANSI_RESET + "]: Encountered an exception."
+        );
+        System.out.println();
+        e.printStackTrace();
+        System.out.println();
     }
 
     // Format a user input.
