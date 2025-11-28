@@ -7,7 +7,7 @@ public class Members {
         Connection conn, String name, String gender, Date dob, String email, String phone
     ) {
         try {
-            String query = "INSERT INTO members (name, gender, date_of_birth, email, phone) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO members (name, gender, date_of_birth, email, phone) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setString(1, name);
             pstmt.setString(2, gender);
