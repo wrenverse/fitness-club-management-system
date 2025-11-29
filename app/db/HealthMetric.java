@@ -1,6 +1,6 @@
 import java.sql.*;
 
-public class HealthMetrics {
+public class HealthMetric {
     
     // Insert a health metric record into the health metrics table.
     public static boolean addRecord(

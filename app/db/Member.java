@@ -1,6 +1,6 @@
 import java.sql.*;
 
-public class Members {
+public class Member {
     
     // Insert a member into the members table.
     public static boolean addMember(
