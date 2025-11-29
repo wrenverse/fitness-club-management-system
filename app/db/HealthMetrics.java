@@ -35,10 +35,12 @@ public class HealthMetrics {
     public static ResultSet getLatest(Connection conn, Integer memberId) {
         try {
             String query = "SELECT * FROM health_metrics WHERE timestamp = "
-                + "(SELECT MAX(timestamp) FROM health_metrics WHERE member_id = "
-                + "%d) AND member_id = %d);";
-            query = String.format(query, memberId, memberId);
-            return conn.createStatement().executeQuery(query);
+                + "(SELECT MAX(timestamp) FROM health_metrics WHERE member_id=?"
+                + ") AND member_id=?);";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, memberId);
+            pstmt.setInt(2, memberId);
+            return pstmt.executeQuery(query);
         } catch (Exception e) {
             Terminal.exception(e);
         }
@@ -48,9 +50,10 @@ public class HealthMetrics {
     // Get a member's health metric records.
     public static ResultSet getRecords(Connection conn, Integer memberId) {
         try {
-            String query = "SELECT * FROM health_metrics WHERE member_id = %d);";
-            query = String.format(query, memberId);
-            return conn.createStatement().executeQuery(query);
+            String query = "SELECT * FROM health_metrics WHERE member_id=?);";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, memberId);
+            return pstmt.executeQuery(query);
         } catch (Exception e) {
             Terminal.exception(e);
         }
