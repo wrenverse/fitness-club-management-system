@@ -106,12 +106,9 @@ public class Member {
     // Get a member's information.
     public static ResultSet getInfo(Connection conn, Integer memberId) {
         try {
-            String query = "SELECT * FROM members WHERE timestamp="
-                + "(SELECT MAX(timestamp) FROM health_metrics WHERE member_id=?"
-                + ") AND member_id=?)";
+            String query = "SELECT * FROM members WHERE member_id=?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
-            pstmt.setInt(2, memberId);
             return pstmt.executeQuery(query);
         } catch (Exception e) {
             Terminal.exception(e);
