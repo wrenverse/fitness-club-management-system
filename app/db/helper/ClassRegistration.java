@@ -63,4 +63,45 @@ public class ClassRegistration {
         }
         return true;
     }
+
+    /**
+     * Check if a time slot conflicts with an existing class registration.
+     * @param conn The connection to the database.
+     * @param memberId The ID of the member with the schedule to be checked.
+     * @param startTimestamp The starting timestamp of the time slot.
+     * @param endTimestamp The end timestamp of the time slot.
+     * @return True if there exists a conflict or failed to find a match for the ID,
+     *  false otherwise.
+     */
+    public static boolean isConflicting(
+        Connection conn,
+        Integer memberId,
+        Timestamp startTimestamp,
+        Timestamp endTimestamp
+    ) {
+        try {
+            // Get all the classes of the trainer.
+            String query = """
+                SELECT start_timestamp, end_timestamp
+                    FROM class_registration
+                    WHERE member_id = ?
+                """;
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, memberId);
+            ResultSet rs = pstmt.executeQuery(query);
+
+            // Check each class for scheduling conflicts.
+            while(rs.next()) {
+                Timestamp st = rs.getTimestamp("start_timestamp");
+                Timestamp et = rs.getTimestamp("end_timestamp");
+                if (Utilities.overlaps(startTimestamp, endTimestamp, st, et))
+                    return true;
+            }
+
+        } catch (Exception e) {
+            Terminal.exception(e);
+            return true;
+        }
+        return false;
+    }
 }
