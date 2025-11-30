@@ -26,11 +26,11 @@ public class PTSession {
         try {
             String query = """
                 INSERT INTO pt_sessions (
-                    trainerId,
-                    memberId,
-                    roomId,
-                    startTimestamp,
-                    endTimestamp
+                    trainer_id,
+                    member_id,
+                    room_id,
+                    start_timestamp,
+                    end_timestamp
                 ) VALUES (?, ?, ?, ?, ?)
                 """;
             PreparedStatement pstmt = conn.prepareStatement(query);
