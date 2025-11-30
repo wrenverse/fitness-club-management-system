@@ -23,7 +23,25 @@ public class TrainerAvailibility {
         Integer reccurences
     ) {
         try {
+            // Prevent a trainer from creating a conflicting availibility block.
+            if (isConflicting(conn, trainerId, startTimestamp, endTimestamp))
+                return false;
             Calendar calendar = Calendar.getInstance();
+            Timestamp st = new Timestamp(startTimestamp.getTime());
+            Timestamp et = new Timestamp(endTimestamp.getTime());
+            for (int i = 0; i < reccurences; i++) {
+                // Add a week to the starting timestamp.
+                calendar.setTime(st);
+                calendar.add(Calendar.WEEK_OF_YEAR, 1);
+                st = new Timestamp(calendar.getTimeInMillis());
+                // Add a week to the ending timestamp.
+                calendar.setTime(et);
+                calendar.add(Calendar.WEEK_OF_YEAR, 1);
+                et = new Timestamp(calendar.getTimeInMillis());
+                if (isConflicting(conn, trainerId, st, et))
+                    return false;
+            }
+
             String query = """
                 INSERT INTO trainer_availibility (
                     trainer_id,
@@ -63,10 +81,10 @@ public class TrainerAvailibility {
      * Update the starting timestamp of an availibility block.
      * @param conn The connection to the database.
      * @param availibilityId The ID of the availibility block.
-     * @param ts The timestamp to be modified to.
+     * @param st The timestamp to be modified to.
      * @return True if successfully modified, false otherwise.
      */
-    public static boolean updateStart(Connection conn, Integer availibilityId, Timestamp ts) {
+    public static boolean updateStart(Connection conn, Integer availibilityId, Timestamp st) {
         try {
             String query = """
                 UPDATE trainer_availibility
@@ -74,7 +92,7 @@ public class TrainerAvailibility {
                     WHERE availibility_id = ?
                 """;
             PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setTimestamp(1, ts);
+            pstmt.setTimestamp(1, st);
             pstmt.setInt(2, availibilityId);
             pstmt.executeUpdate();
             pstmt.close();
@@ -89,10 +107,10 @@ public class TrainerAvailibility {
      * Update the ending timestamp of an availibility block.
      * @param conn The connection to the database.
      * @param availibilityId The ID of the availibility block.
-     * @param ts The timestamp to be modified to.
+     * @param st The timestamp to be modified to.
      * @return True if successfully modified, false otherwise.
      */
-    public static boolean updateEnd(Connection conn, Integer availibilityId, Timestamp ts) {
+    public static boolean updateEnd(Connection conn, Integer availibilityId, Timestamp st) {
         try {
             String query = """
                 UPDATE trainer_availibility
@@ -100,7 +118,7 @@ public class TrainerAvailibility {
                     WHERE availibility_id = ?
                 """;
             PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setTimestamp(1, ts);
+            pstmt.setTimestamp(1, st);
             pstmt.setInt(2, availibilityId);
             pstmt.executeUpdate();
             pstmt.close();
@@ -129,5 +147,46 @@ public class TrainerAvailibility {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Check if a time slot conflicts with an existing availibility.
+     * @param conn The connection to the database.
+     * @param trainerId The ID of the trainer with the schedule to be checked.
+     * @param startTimestamp The starting timestamp of the time slot.
+     * @param endTimestamp The end timestamp of the time slot.
+     * @return True if there exists a conflict or failed to find a match for the ID,
+     *  false otherwise.
+     */
+    public static boolean isConflicting(
+        Connection conn,
+        Integer trainerId,
+        Timestamp startTimestamp,
+        Timestamp endTimestamp
+    ) {
+        try {
+            // Get all the classes of the trainer.
+            String query = """
+                SELECT start_timestamp, end_timestamp
+                    FROM classes
+                    WHERE trainer_id = ?
+                """;
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, trainerId);
+            ResultSet rs = pstmt.executeQuery(query);
+
+            // Check each availibility block for scheduling conflicts.
+            while(rs.next()) {
+                Timestamp st = rs.getTimestamp("start_timestamp");
+                Timestamp et = rs.getTimestamp("end_timestamp");
+                if (Utilities.overlaps(startTimestamp, endTimestamp, st, et))
+                    return true;
+            }
+
+        } catch (Exception e) {
+            Terminal.exception(e);
+            return true;
+        }
+        return false;
     }
 }
