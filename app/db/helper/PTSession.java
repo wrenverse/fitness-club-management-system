@@ -23,6 +23,9 @@ public class PTSession {
         Timestamp startTimestamp,
         Timestamp endTimestamp
     ) {
+        // Prevent a member from registering for a conflicting PT session.
+        if (isConflicting(conn, memberId, Role.MEMBER, startTimestamp, endTimestamp))
+            return false;
         try {
             String query = """
                 INSERT INTO pt_sessions (
@@ -66,5 +69,55 @@ public class PTSession {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Check if a time slot conflicts with existing time slots.
+     * @param conn The connection to the database.
+     * @param id The ID of the trainer or member with the schedule to be checked.
+     * @param role The role of the person being checked.
+     * @param startTimestamp The starting timestamp of the time slot.
+     * @param endTimestamp The end timestamp of the time slot.
+     * @return True if there exists a conflict or failed to find a match for the ID,
+     *  false otherwise.
+     */
+    public static boolean isConflicting(
+        Connection conn,
+        Integer id,
+        Role role,
+        Timestamp startTimestamp,
+        Timestamp endTimestamp
+    ) {
+        try {
+            // Get all the personal training sessions of the member or trainer.
+            String query;
+            if (role == Role.MEMBER) 
+                query = """
+                    SELECT start_timestamp, end_timestamp
+                        FROM pt_sessions
+                        WHERE member_id = ?
+                    """;
+            else query = """
+                    SELECT start_timestamp, end_timestamp
+                        FROM pt_sessions
+                        WHERE trainer_id = ?
+                    """;
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery(query);
+
+            // Check each personal training session for scheduling conflicts.
+            while(rs.next()) {
+                Timestamp st = rs.getTimestamp("start_timestamp");
+                Timestamp et = rs.getTimestamp("end_timestamp");
+                if (Utilities.overlaps(startTimestamp, endTimestamp, st, et))
+                    return true;
+            }
+
+        } catch (Exception e) {
+            Terminal.exception(e);
+            return true;
+        }
+        return false;
     }
 }
