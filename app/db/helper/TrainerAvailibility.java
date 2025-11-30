@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.Calendar;
 
 /**
  * Helper class to handle the trainer availibilty table in the database.
@@ -22,6 +23,7 @@ public class TrainerAvailibility {
         Integer reccurences
     ) {
         try {
+            Calendar calendar = Calendar.getInstance();
             String query = """
                 INSERT INTO trainer_availibility (
                     trainer_id,
@@ -34,8 +36,21 @@ public class TrainerAvailibility {
             pstmt.setInt(1, trainerId);
             pstmt.setTimestamp(2, startTimestamp);
             pstmt.setTimestamp(3, endTimestamp);
-            pstmt.setInt(4, reccurences);
             pstmt.executeUpdate();
+            // Insert additional reccuring instances of the block to the table.
+            for (int i = 0; i < reccurences; i++) {
+                // Add a week to the starting timestamp.
+                calendar.setTime(startTimestamp);
+                calendar.add(Calendar.WEEK_OF_YEAR, 1);
+                startTimestamp = new Timestamp(calendar.getTimeInMillis());
+                // Add a week to the ending timestamp.
+                calendar.setTime(endTimestamp);
+                calendar.add(Calendar.WEEK_OF_YEAR, 1);
+                endTimestamp = new Timestamp(calendar.getTimeInMillis());
+                pstmt.setTimestamp(2, startTimestamp);
+                pstmt.setTimestamp(3, endTimestamp);
+                pstmt.executeUpdate();
+            }
             pstmt.close();
         } catch (Exception e) {
             Terminal.exception(e);
