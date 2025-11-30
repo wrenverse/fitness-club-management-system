@@ -1,3 +1,6 @@
+/**
+ * Terminal class to format terminal messages.
+ */
 public class Terminal {
 
     // Declare ANSI colour codes.

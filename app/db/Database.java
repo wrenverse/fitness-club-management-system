@@ -1,5 +1,8 @@
 import java.sql.*;
 
+/**
+ * Database class to handle interactions with the database.
+ */
 public class Database {
 
     private Connection conn;
@@ -8,7 +11,13 @@ public class Database {
         conn = null;
     }
 
-    // Connect to the database.
+    /**
+     * Connect to the database.
+     * @param url URL of the database.
+     * @param username Username to log in to the database.
+     * @param password to log in to the database.
+     * @return True if the connection was successful, false otherwise.
+     */
     public boolean connect(String url, String username, String password) {
         Terminal.database("Attempting to establish database connection...");
         try {

@@ -1,5 +1,8 @@
 import java.util.*;
 
+/**
+ * App class to initialize the application.
+ */
 public class App {
 
     private Database db;
@@ -8,10 +11,18 @@ public class App {
         db = new Database();
     }
 
+    /**
+     * Connect to the database.
+     * @param url URL of the database.
+     * @param username Username to log in to the database.
+     * @param password to log in to the database.
+     * @return True if the connection was successful, false otherwise.
+     */
     public boolean connectDatabase(String url, String username, String password) {
         return db.connect(url, username, password);
     }
 
+    // The main function.
     public static void main(String[] args) {
 
         App app = new App();
