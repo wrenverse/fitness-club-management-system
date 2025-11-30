@@ -7,19 +7,18 @@ public class Payment {
 
     /**
      * Insert a payment record into the payments table.
+     * Automatically records the current date as the payment date.
      * @param conn The connection to the database.
      * @param invoiceId The ID of the invoice.
      * @param amountPaid The amount of money paid.
      * @param method The method used for the payment.
-     * @param paymentDate The date the payment was conducted.
      * @return True if successfully added, false otherwise.
      */
     public static boolean add(
         Connection conn,
         Integer invoiceId,
         Float amountPaid,
-        String method,
-        Date paymentDate
+        String method
     ) {
         try {
             String query = """
@@ -34,7 +33,7 @@ public class Payment {
             pstmt.setInt(1, invoiceId);
             pstmt.setFloat(2, amountPaid);
             pstmt.setString(3, method);
-            pstmt.setDate(4, paymentDate);
+            pstmt.setDate(4, java.sql.Date.valueOf(java.time.LocalDate.now()));
             pstmt.executeUpdate();
             pstmt.close();
         } catch (Exception e) {

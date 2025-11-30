@@ -65,7 +65,11 @@ public class Equipment {
      * @param isOperational The operational status to be modified to.
      * @return True if successfully modified, false otherwise.
      */
-    public static boolean updateCompletion(Connection conn, Integer equipmentId, boolean isOperational) {
+    public static boolean updateOperational(
+        Connection conn,
+        Integer equipmentId,
+        boolean isOperational
+    ) {
         try {
             String query = """
                 UPDATE equipment

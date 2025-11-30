@@ -7,16 +7,15 @@ public class MaintenanceTicket {
     
     /**
      * Insert a maintenance ticket into the maintenance tickets table.
+     * Automatically records the current date as the report date.
      * @param conn The connection to the database.
      * @param equipmentId The ID of the equipment.
-     * @param reportDate The date of the ticket is created.
      * @param description The description of the repairs needed.
      * @return True if successfully added, false otherwise.
      */
     public static boolean add(
         Connection conn,
         Integer equipmentId,
-        Date reportDate,
         String description
     ) {
         try {
@@ -32,7 +31,7 @@ public class MaintenanceTicket {
                 """;
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, equipmentId);
-            pstmt.setDate(2, reportDate);
+            pstmt.setDate(2, java.sql.Date.valueOf(java.time.LocalDate.now()));
             pstmt.setString(3, description);
             pstmt.setBoolean(4, false);
             pstmt.setBoolean(5, false);
@@ -74,8 +73,8 @@ public class MaintenanceTicket {
 
     /**
      * Mark a maintenance ticket as resolved.
-     * Records the resolution date as current date.
-     * Updates repairing status to false.
+     * Automatically records the current date as the resolution date.
+     * Automatically updates repairing status to false.
      * @param conn The connection to the database.
      * @param ticketId The ID of the maintenance ticket.
      * @return True if successfully modified, false otherwise.

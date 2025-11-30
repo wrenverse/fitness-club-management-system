@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.time.LocalDateTime;
 
 /**
  * Helper class to handle the health metrics table in the database.
@@ -7,9 +8,9 @@ public class HealthMetric {
     
     /**
      * Insert a health metric record into the health metrics table.
+     * Automatically records the current timestamp as the timestamp of the record.
      * @param conn The connection to the database.
      * @param memberId The ID of the member.
-     * @param timestamp The timestamp of the record.
      * @param heartRate The heart rate of the member recorded in beats per minute.
      * @param bodyFat The body fat of the member recorded in percentage.
      * @param weight The weight of the member recorded in pounds.
@@ -19,7 +20,6 @@ public class HealthMetric {
     public static boolean add(
         Connection conn,
         Integer memberId,
-        Timestamp timestamp,
         Integer heartRate,
         Float bodyFat,
         Integer weight,
@@ -38,7 +38,7 @@ public class HealthMetric {
                 """;
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
-            pstmt.setTimestamp(2, timestamp);
+            pstmt.setTimestamp(2, java.sql.Timestamp.valueOf(LocalDateTime.now()));
             pstmt.setInt(3, heartRate);
             pstmt.setFloat(4, bodyFat);
             pstmt.setInt(5, weight);

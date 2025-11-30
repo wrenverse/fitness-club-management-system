@@ -7,13 +7,13 @@ public class FitnessGoal {
     
     /**
      * Insert a fitness goal into the fitness goals table.
+     * The goal is marked incomplete by default.
      * @param conn The connection to the database.
      * @param memberId The ID of the member.
      * @param typeId The fitness goal type.
      * @param targetValue The target value of the goal.
      * @param targetDate The target date to complete the goal by.
      * @param startDate The date the member starts the goal.
-     * @param isCompleted True if the goal is completed, false otherwise.
      * @return True if successfully added, false otherwise.
      */
     public static boolean add(
@@ -22,8 +22,7 @@ public class FitnessGoal {
         Integer typeId,
         Float targetValue,
         Date targetDate,
-        Date startDate,
-        boolean isCompleted
+        Date startDate
     ) {
         try {
             String query = """
@@ -42,7 +41,7 @@ public class FitnessGoal {
             pstmt.setFloat(3, targetValue);
             pstmt.setDate(4, targetDate);
             pstmt.setDate(5, startDate);
-            pstmt.setBoolean(6, isCompleted);
+            pstmt.setBoolean(6, false);
             pstmt.executeUpdate();
             pstmt.close();
         } catch (Exception e) {
@@ -53,13 +52,12 @@ public class FitnessGoal {
     }
 
     /**
-     * Update the completion status of a fitness goal.
+     * Marked a fitness goal as completed.
      * @param conn The connection to the database.
      * @param goalId The ID of the goal.
-     * @param isCompleted The completion status to be modified to.
      * @return True if successfully modified, false otherwise.
      */
-    public static boolean updateCompletion(Connection conn, Integer goalId, boolean isCompleted) {
+    public static boolean markedCompleted(Connection conn, Integer goalId) {
         try {
             String query = """
                 UPDATE fitness_goals
@@ -67,7 +65,7 @@ public class FitnessGoal {
                     WHERE goal_id = ?
                 """;
             PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setBoolean(1, isCompleted);
+            pstmt.setBoolean(1, true);
             pstmt.setInt(2, goalId);
             pstmt.executeUpdate();
             pstmt.close();

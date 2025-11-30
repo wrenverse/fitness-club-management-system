@@ -7,13 +7,13 @@ public class Member {
     
     /**
      * Insert a member into the members table.
+     * Automatically records the current date as the join date.
      * @param conn The connection to the database.
      * @param name The full name of the member.
      * @param dob The date of birth of the member.
      * @param gender The gender of the member.
      * @param email The email of the member.
      * @param phone The phone of the member.
-     * @param joinDate The date the member joined.
      * @return True if successfully added, false otherwise.
      */
     public static boolean add(
@@ -22,8 +22,7 @@ public class Member {
         Date dob,
         String gender,
         String email,
-        String phone,
-        Date joinDate
+        String phone
     ) {
         try {
             String query = """
@@ -42,7 +41,7 @@ public class Member {
             pstmt.setString(3, gender);
             pstmt.setString(4, email);
             pstmt.setString(5, phone);
-            pstmt.setDate(6, joinDate);
+            pstmt.setDate(6, java.sql.Date.valueOf(java.time.LocalDate.now()));
             pstmt.executeUpdate();
             pstmt.close();
         } catch (Exception e) {
