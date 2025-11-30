@@ -24,6 +24,9 @@ public class FitnessClass {
         Timestamp endTimestamp
     ) {
         try {
+            // Prevent a trainer from registering for creating a conflicting class.
+            if (isConflicting(conn, trainerId, roomId, startTimestamp, endTimestamp))
+                return false;
             String query = """
                 INSERT INTO classes (
                     trainer_id,
@@ -154,5 +157,50 @@ public class FitnessClass {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Check if a time slot conflicts with existing time slots.
+     * @param conn The connection to the database.
+     * @param trainerId The ID of the trainer with the schedule to be checked.
+     * @param roomId The room ID of the room to be checked.
+     * @param startTimestamp The starting timestamp of the time slot.
+     * @param endTimestamp The end timestamp of the time slot.
+     * @return True if there exists a conflict or failed to find a match for the ID,
+     *  false otherwise.
+     */
+    public static boolean isConflicting(
+        Connection conn,
+        Integer memberId,
+        Integer roomId,
+        Timestamp startTimestamp,
+        Timestamp endTimestamp
+    ) {
+        try {
+            // Get all the classes of the trainer.
+            String query = """
+                SELECT start_timestamp, end_timestamp
+                    FROM classes
+                    WHERE trainer_id = ?
+                        OR room_id = ?
+                """;
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, memberId);
+            pstmt.setInt(2, roomId);
+            ResultSet rs = pstmt.executeQuery(query);
+
+            // Check each class for scheduling conflicts.
+            while(rs.next()) {
+                Timestamp st = rs.getTimestamp("start_timestamp");
+                Timestamp et = rs.getTimestamp("end_timestamp");
+                if (Utilities.overlaps(startTimestamp, endTimestamp, st, et))
+                    return true;
+            }
+
+        } catch (Exception e) {
+            Terminal.exception(e);
+            return true;
+        }
+        return false;
     }
 }
