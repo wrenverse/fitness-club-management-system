@@ -52,6 +52,27 @@ public class FitnessClass {
     }
 
     /**
+     * Delete a class by ID.
+     * @param conn The connection to the database.
+     * @param classId The ID of the class.
+     * @return True if successfully deleted, false otherwise.
+     */
+    public static boolean delete(Connection conn, Integer classId) {
+        try {
+            if (!(exists(conn, classId))) return false;
+            String query = "DELETE FROM classes WHERE class_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, classId);
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (Exception e) {
+            Terminal.exception(e);
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Update the trainer of a class.
      * @param conn The connection to the database.
      * @param classId The ID of the class.
@@ -60,6 +81,7 @@ public class FitnessClass {
      */
     public static boolean updateTrainer(Connection conn, Integer classId, Integer trainerId) {
         try {
+            if (!(exists(conn, classId))) return false;
             String query = "UPDATE classes SET trainer_id = ? WHERE class_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, trainerId);
@@ -82,9 +104,33 @@ public class FitnessClass {
      */
     public static boolean updateRoom(Connection conn, Integer classId, Integer roomId) {
         try {
+            if (!(exists(conn, classId))) return false;
             String query = "UPDATE classes SET room_id = ? WHERE class_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, roomId);
+            pstmt.setInt(2, classId);
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (Exception e) {
+            Terminal.exception(e);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Update the name of a class.
+     * @param conn The connection to the database.
+     * @param classId The ID of the class.
+     * @param name The name to be modified to.
+     * @return True if successfully modified, false otherwise.
+     */
+    public static boolean updateName(Connection conn, Integer classId, String name) {
+        try {
+            if (!(exists(conn, classId))) return false;
+            String query = "UPDATE classes SET name = ? WHERE class_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, name);
             pstmt.setInt(2, classId);
             pstmt.executeUpdate();
             pstmt.close();
@@ -104,6 +150,7 @@ public class FitnessClass {
      */
     public static boolean updateStart(Connection conn, Integer classId, Timestamp ts) {
         try {
+            if (!(exists(conn, classId))) return false;
             String query = "UPDATE classes SET start_timestamp = ? WHERE class_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setTimestamp(1, ts);
@@ -126,6 +173,7 @@ public class FitnessClass {
      */
     public static boolean updateEnd(Connection conn, Integer classId, Timestamp ts) {
         try {
+            if (!(exists(conn, classId))) return false;
             String query = "UPDATE classes SET end_timestamp = ? WHERE class_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setTimestamp(1, ts);
@@ -140,23 +188,81 @@ public class FitnessClass {
     }
 
     /**
-     * Delete a class by ID.
+     * Get the name of a class by ID.
      * @param conn The connection to the database.
      * @param classId The ID of the class.
-     * @return True if successfully deleted, false otherwise.
+     * @return The name of the class.
      */
-    public static boolean delete(Connection conn, Integer classId) {
+    public static String getName(Connection conn, Integer classId) {
         try {
-            String query = "DELETE FROM classes WHERE class_id = ?";
+            if (!exists(conn, classId)) return null;
+            String query = "SELECT name FROM classes WHERE class_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, classId);
-            pstmt.executeUpdate();
+            String name = pstmt.executeQuery(query).getString("name");
             pstmt.close();
+            return name;
         } catch (Exception e) {
             Terminal.exception(e);
-            return false;
         }
-        return true;
+        return null;
+    }
+
+    /**
+     * Get the capacity of a class.
+     * @param conn The connection to the database.
+     * @param classId The ID of the class.
+     * @return The capacity of the class.
+     */
+    public static Integer getCapacity(Connection conn, Integer classId) {
+        try {
+            if (!(exists(conn, classId))) return null;
+            String query = "SELECT capacity FROM classes WHERE class_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, classId);
+            return pstmt.executeQuery(query).getInt("capacity");
+        } catch (Exception e) {
+            Terminal.exception(e);
+        }
+        return null;
+    }
+
+    /**
+     * Get the starting timestamp of a class.
+     * @param conn The connection to the database.
+     * @param classId The ID of the class.
+     * @return The starting timestamp of the class.
+     */
+    public static Timestamp getStart(Connection conn, Integer classId) {
+        try {
+            if (!(exists(conn, classId))) return null;
+            String query = "SELECT start_timestamp FROM classes WHERE class_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, classId);
+            return pstmt.executeQuery(query).getTimestamp("start_timestamp");
+        } catch (Exception e) {
+            Terminal.exception(e);
+        }
+        return null;
+    }
+
+    /**
+     * Get the ending timestamp of a class.
+     * @param conn The connection to the database.
+     * @param classId The ID of the class.
+     * @return The ending timestamp of the class.
+     */
+    public static Timestamp getEnd(Connection conn, Integer classId) {
+        try {
+            if (!(exists(conn, classId))) return null;
+            String query = "SELECT end_timestamp FROM classes WHERE class_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, classId);
+            return pstmt.executeQuery(query).getTimestamp("end_timestamp");
+        } catch (Exception e) {
+            Terminal.exception(e);
+        }
+        return null;
     }
 
     /**
@@ -205,56 +311,22 @@ public class FitnessClass {
     }
 
     /**
-     * Get the starting timestamp of a class.
+     * Check if a class exists with the given ID.
      * @param conn The connection to the database.
      * @param classId The ID of the class.
-     * @return The starting timestamp of the class.
+     * @return True if the class exists, false otherwise.
      */
-    public static Timestamp getStart(Connection conn, Integer classId) {
+    public static boolean exists(Connection conn, Integer classId) {
         try {
-            String query = "SELECT start_timestamp FROM classes WHERE class_id = ?";
+            String query = "SELECT class_id FROM classes WHERE class_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, classId);
-            return pstmt.executeQuery(query).getTimestamp("start_timestamp");
+            boolean exists = pstmt.executeQuery(query).next();
+            pstmt.close();
+            return exists;
         } catch (Exception e) {
             Terminal.exception(e);
         }
-        return null;
-    }
-
-    /**
-     * Get the ending timestamp of a class.
-     * @param conn The connection to the database.
-     * @param classId The ID of the class.
-     * @return The ending timestamp of the class.
-     */
-    public static Timestamp getEnd(Connection conn, Integer classId) {
-        try {
-            String query = "SELECT end_timestamp FROM classes WHERE class_id = ?";
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setInt(1, classId);
-            return pstmt.executeQuery(query).getTimestamp("end_timestamp");
-        } catch (Exception e) {
-            Terminal.exception(e);
-        }
-        return null;
-    }
-
-    /**
-     * Get the capacity of a class.
-     * @param conn The connection to the database.
-     * @param classId The ID of the class.
-     * @return The capacity of the class.
-     */
-    public static Integer getCapacity(Connection conn, Integer classId) {
-        try {
-            String query = "SELECT capacity FROM classes WHERE class_id = ?";
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setInt(1, classId);
-            return pstmt.executeQuery(query).getInt("capacity");
-        } catch (Exception e) {
-            Terminal.exception(e);
-        }
-        return null;
+        return false;
     }
 }
