@@ -10,8 +10,7 @@ INSERT INTO members (name, date_of_birth, gender, email, phone, join_date) VALUE
 ('Will Leung', '1993-12-30', 'Male', 'will.leung@gmail.com', '130-986-5742', '2023-10-18');
 
 -- Insert Trainers
-INSERT INTO trainers (name, email, phone, specialization, hire_date)
-VALUES
+INSERT INTO trainers (name, email, phone, specialization, hire_date) VALUES
 ('Cassie Min', 'cassie.min@gmail.com', '243-890-3487', 'Yoga & Pilates', '2022-12-01'),
 ('Howard Brown', 'howard.brown@hotmail.com', '478-263-0850', 'Strength Training', '2022-12-02'),
 ('Michelle Anderson', 'michelle.anderson@gmail.com', '642-789-1900', 'Cardio & HITT', '2022-12-03');
@@ -93,6 +92,7 @@ INSERT INTO invoice_items (invoice_id, item_num, item_type, quantity, unit_price
 -- Insert Payment
 INSERT INTO payments (invoice_id, amount_paid, method, payment_date) VALUES
     (1, 80.00, 'Credit Card', '2025-12-01');
+
 
 
 
