@@ -281,7 +281,7 @@ public class Member {
     public static Date getJoinDate(Connection conn, Integer memberId) {
         try {
             if (!exists(conn, memberId)) return null;
-            String query = "SELECT joine_date FROM members WHERE memberId = ?";
+            String query = "SELECT join_date FROM members WHERE member_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
             Date date = pstmt.executeQuery(query).getDate("join_date");
