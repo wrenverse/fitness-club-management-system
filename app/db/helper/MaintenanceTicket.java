@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.LinkedList;
 
 /**
  * Helper class to handle the maintenance tickets table in the database.
@@ -54,6 +55,7 @@ public class MaintenanceTicket {
      */
     public static boolean updateRepairing(Connection conn, Integer ticketId, boolean beingRepaired) {
         try {
+            if (!exists(conn, ticketId)) return false;
             String query = """
                 UPDATE fitness_goals
                     SET being_repaired = ?
@@ -81,9 +83,10 @@ public class MaintenanceTicket {
      */
     public static boolean markResolved(Connection conn, Integer ticketId) {
         try {
+            if (!exists(conn, ticketId)) return false;
             String query = """
                 UPDATE maintenance_tickets
-                    SET is_resolved = ?
+                    SET is_repaired = ?
                     WHERE ticket_id = ?
                 """;
             PreparedStatement pstmt = conn.prepareStatement(query);
@@ -107,5 +110,173 @@ public class MaintenanceTicket {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Get the equipment ID of a maintenance ticket by ID.
+     * @param conn The connection to the database.
+     * @param ticketId The ID of the ticket.
+     * @return The equipment ID of the ticket.
+     */
+    public static Integer getEquipmentId(Connection conn, Integer ticketId) {
+        try {
+            if (!exists(conn, ticketId)) return null;
+            String query = "SELECT equipment_id FROM maintenance_tickets WHERE ticket_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, ticketId);
+            Integer id = pstmt.executeQuery(query).getInt("equipment_id");
+            pstmt.close();
+            return id;
+        } catch (Exception e) {
+            Terminal.exception(e);
+        }
+        return null;
+    }
+
+    /**
+     * Get the report date of a maintenance ticket by ID.
+     * @param conn The connection to the database.
+     * @param ticketId The ID of the ticket.
+     * @return The report date of the ticket.
+     */
+    public static Date getReportDate(Connection conn, Integer ticketId) {
+        try {
+            if (!exists(conn, ticketId)) return null;
+            String query = "SELECT report_date FROM maintenance_tickets WHERE ticket_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, ticketId);
+            Date date = pstmt.executeQuery(query).getDate("report_date");
+            pstmt.close();
+            return date;
+        } catch (Exception e) {
+            Terminal.exception(e);
+        }
+        return null;
+    }
+
+    /**
+     * Get the description of a maintenance ticket by ID.
+     * @param conn The connection to the database.
+     * @param ticketId The ID of the ticket.
+     * @return The description of the maintenance ticket.
+     */
+    public static String getDescription(Connection conn, Integer ticketId) {
+        try {
+            if (!exists(conn, ticketId)) return null;
+            String query = "SELECT description FROM maintenance_tickets WHERE ticket_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, ticketId);
+            String gender = pstmt.executeQuery(query).getString("description");
+            pstmt.close();
+            return gender;
+        } catch (Exception e) {
+            Terminal.exception(e);
+        }
+        return null;
+    }
+
+    /**
+     * Check if a ticket problem with the given ID is being repaired.
+     * @param conn The connection to the database.
+     * @param ticketId The ID of ticket.
+     * @return True if the ticket is bring repaired, false otherwise.
+     */
+    public static boolean isBeingRepaired(Connection conn, Integer ticketId) {
+        try {
+            if (!exists(conn, ticketId)) return false;
+            String query = "SELECT being_repaired FROM maintenance_tickets WHERE ticket_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, ticketId);
+            boolean isOperational = pstmt.executeQuery(query).getBoolean("being_repaired");
+            pstmt.close();
+            return isOperational;
+        } catch (Exception e) {
+            Terminal.exception(e);
+        }
+        return false;
+    }
+
+    /**
+     * Check if a ticket problem with the given ID is repaired.
+     * @param conn The connection to the database.
+     * @param ticketId The ID of ticket.
+     * @return True if the ticket is repaired, false otherwise.
+     */
+    public static boolean isRepaired(Connection conn, Integer ticketId) {
+        try {
+            if (!exists(conn, ticketId)) return false;
+            String query = "SELECT is_repaired FROM maintenance_tickets WHERE ticket_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, ticketId);
+            boolean isOperational = pstmt.executeQuery(query).getBoolean("is_repaired");
+            pstmt.close();
+            return isOperational;
+        } catch (Exception e) {
+            Terminal.exception(e);
+        }
+        return false;
+    }
+
+    /**
+     * Get the resolution date of a maintenance ticket by ID.
+     * @param conn The connection to the database.
+     * @param ticketId The ID of the ticket.
+     * @return The resolution date of the ticket.
+     */
+    public static Date getResolutionDate(Connection conn, Integer ticketId) {
+        try {
+            if (!exists(conn, ticketId)) return null;
+            if (!isRepaired(conn, ticketId)) return null;
+            String query = "SELECT resolved_date FROM maintenance_tickets WHERE ticket_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, ticketId);
+            Date date = pstmt.executeQuery(query).getDate("resolved_date");
+            pstmt.close();
+            return date;
+        } catch (Exception e) {
+            Terminal.exception(e);
+        }
+        return null;
+    }
+
+    /**
+     * Get the IDs of all maintenance tickets.
+     * @param conn The connection to the database.
+     * @return The IDs of the tickets.
+     */
+    public static LinkedList<Integer> getAllTickets(Connection conn) {
+        try {
+            String query = "SELECT ticket_id FROM maintenance_tickets";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery(query);
+            LinkedList<Integer> ids = new LinkedList<>();
+            while (rs.next()) ids.add(rs.getInt("ticket_id"));
+            pstmt.close();
+            rs.close();
+            return ids;
+        } catch (Exception e) {
+            Terminal.exception(e);
+        }
+        return null;
+    }
+
+    /**
+     * Check if a maintenance ticket exists with the given ID.
+     * @param conn The connection to the database.
+     * @param ticketId The ID of the maintenance ticket.
+     * @return True if the ticket exists, false otherwise.
+     */
+    public static boolean exists(Connection conn, Integer ticketId) {
+        try {
+            String query = "SELECT ticket_id FROM maintenance_tickets WHERE ticket_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, ticketId);
+            boolean exists = pstmt.executeQuery(query).next();
+            pstmt.close();
+            return exists;
+        } catch (Exception e) {
+            Terminal.exception(e);
+        }
+        return false;
     }
 }
