@@ -144,11 +144,12 @@ CREATE TABLE invoice (
 
 CREATE TABLE invoice_items (
     invoice_id      INT NOT NULL,
+    item_num        INT NOT NULL,
     item_type       VARCHAR(50) NOT NULL,
     quantity        INT NOT NULL,
     unit_price      FLOAT NOT NULL,
     total_price     FLOAT NOT NULL,
-    PRIMARY KEY (invoice_id),
+    PRIMARY KEY (invoice_id, item_num),
     FOREIGN KEY (invoice_id)
         REFERENCES invoice(invoice_id)
 );
