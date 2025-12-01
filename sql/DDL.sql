@@ -122,11 +122,12 @@ CREATE TABLE class_registration (
 
 CREATE TABLE maintenance_tickets (
     ticket_id       SERIAL PRIMARY KEY,
-    equipment_id    INT,
+    equipment_id    INT NOT NULL,
     report_date     DATE NOT NULL,
     description     VARCHAR(150),
+    being_repaired  BOOLEAN NOT NULL DEFAULT FALSE,
+    is_repaired     BOOLEAN NOT NULL DEFAULT FALSE,
     resolved_date   DATE,
-    is_completed    BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (equipment_id)
         REFERENCES equipment(equipment_id)
 );
@@ -163,5 +164,6 @@ CREATE TABLE payments (
     FOREIGN KEY (invoice_id)
         REFERENCES invoice(invoice_id)
 );
+
 
 
