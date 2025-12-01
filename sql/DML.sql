@@ -42,7 +42,7 @@ INSERT INTO goal_types (name, unit) VALUES
     ('Strength (Bench Press)', 'kg');
 
 -- Fitness Goals
-INSERT INTO fitness_goal (member_id, type_id, target_value, target_date, start_date, is_completed) VALUES
+INSERT INTO fitness_goals (member_id, type_id, target_value, target_date, start_date, is_completed) VALUES
     (1, 1, 5.0, '2025-12-01', '2025-10-10', FALSE), 
     (2, 2, 3.0, '2025-6-15', '2025-04-11', FALSE);
 
@@ -82,11 +82,11 @@ INSERT INTO class_registration (class_id, member_id, register_date) VALUES
     (3, 5, '2025-12-20');
 
 -- Insert Maintenance Ticket
-INSERT INTO maintenance_ticket (equipment_id, report_date, description, resolved_date, is_completed) VALUES
+INSERT INTO maintenance_tickets (equipment_id, report_date, description, resolved_date, is_completed) VALUES
     (2, '2025-11-25', 'Unusual noise from motor', NULL, TRUE);
 
 -- Insert Invoice 
-INSERT INTO invoice (member_id, issue_timestamp, total, is_paid) VALUES
+INSERT INTO invoices (member_id, issue_timestamp, total, is_paid) VALUES
     (1, '2025-11-30 10:00', 80.00, FALSE);
 
 -- Insert Invoice Items
@@ -97,3 +97,4 @@ INSERT INTO invoice_items (invoice_id, item_num, item_type, quantity, unit_price
 
 INSERT INTO payments (invoice_id, amount_paid, method, payment_date) VALUES
     (1, 80.00, 'Credit Card', '2025-12-01');
+
