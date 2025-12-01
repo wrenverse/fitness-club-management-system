@@ -91,8 +91,8 @@ INSERT INTO invoice_items (invoice_id, item_num, item_type, quantity, unit_price
     (1, 1, 'PT Session', 2, 40.00, 80.00);
 
 -- Insert Payment
-
 INSERT INTO payments (invoice_id, amount_paid, method, payment_date) VALUES
     (1, 80.00, 'Credit Card', '2025-12-01');
+
 
 
