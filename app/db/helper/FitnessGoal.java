@@ -265,6 +265,7 @@ public class FitnessGoal {
      */
     public static boolean isCompleted(Connection conn, Integer goalId) {
         try {
+            if (!exists(conn, goalId)) return false;
             String query = "SELECT is_completed FROM fitness_goals WHERE goal_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, goalId);
