@@ -60,8 +60,8 @@ CREATE TABLE health_metrics (
     timestamp       TIMESTAMP,
     heart_rate      INT NOT NULL,
     body_fat        FLOAT NOT NULL,
-    weight          FLOAT NOT NULL,
-    height          FLOAT NOT NULL,
+    weight          INT NOT NULL,
+    height          INT NOT NULL,
     FOREIGN KEY (member_id)
         REFERENCES members(member_id)
 );
@@ -163,4 +163,5 @@ CREATE TABLE payments (
     FOREIGN KEY (invoice_id)
         REFERENCES invoice(invoice_id)
 );
+
 
