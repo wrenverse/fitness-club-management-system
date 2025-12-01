@@ -78,7 +78,7 @@ INSERT INTO class_registration (class_id, member_id, register_date) VALUES
     (3, 5, '2025-12-20');
 
 -- Insert Maintenance Ticket
-INSERT INTO maintenance_tickets (equipment_id, report_date, description, resolved_date, is_completed) VALUES
+INSERT INTO maintenance_tickets (equipment_id, report_date, description, being_repaired, is_repaired, resolved_date) VALUES
     (2, '2025-11-25', 'Unusual noise from motor', NULL, TRUE);
 
 -- Insert Invoice 
@@ -92,6 +92,7 @@ INSERT INTO invoice_items (invoice_id, item_num, item_type, quantity, unit_price
 -- Insert Payment
 INSERT INTO payments (invoice_id, amount_paid, method, payment_date) VALUES
     (1, 80.00, 'Credit Card', '2025-12-01');
+
 
 
 
