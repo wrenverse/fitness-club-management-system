@@ -68,6 +68,7 @@ public class ClassRegistration {
      */
     public static boolean delete(Connection conn, Integer classId, Integer memberId) {
         try {
+            if (!(isRegistered(conn, classId, memberId))) return false;
             String query = """
                 DELETE FROM class_registration
                     WHERE class_id = ?
