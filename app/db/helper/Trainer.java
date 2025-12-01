@@ -17,7 +17,9 @@ public class Trainer {
             String query = "SELECT name FROM trainers WHERE trainer_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, trainerId);
-            return pstmt.executeQuery(query).getString("name");
+            String name = pstmt.executeQuery(query).getString("name");
+            pstmt.close();
+            return name;
         } catch (Exception e) {
             Terminal.exception(e);
         }
@@ -36,7 +38,9 @@ public class Trainer {
             String query = "SELECT email FROM trainers WHERE trainer_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, trainerId);
-            return pstmt.executeQuery(query).getString("email");
+            String email = pstmt.executeQuery(query).getString("email");
+            pstmt.close();
+            return email;
         } catch (Exception e) {
             Terminal.exception(e);
         }
@@ -55,7 +59,9 @@ public class Trainer {
             String query = "SELECT phone FROM trainers WHERE trainer_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, trainerId);
-            return pstmt.executeQuery(query).getString("phone");
+            String phone = pstmt.executeQuery(query).getString("phone");
+            pstmt.close();
+            return phone;
         } catch (Exception e) {
             Terminal.exception(e);
         }
@@ -74,7 +80,9 @@ public class Trainer {
             String query = "SELECT specialization FROM trainers WHERE trainer_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, trainerId);
-            return pstmt.executeQuery(query).getString("specialization");
+            String specialization = pstmt.executeQuery(query).getString("specialization");
+            pstmt.close();
+            return specialization;
         } catch (Exception e) {
             Terminal.exception(e);
         }
@@ -93,7 +101,9 @@ public class Trainer {
             String query = "SELECT hire_date FROM trainers WHERE trainer_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, trainerId);
-            return pstmt.executeQuery(query).getDate("hire_date");
+            Date hireDate = pstmt.executeQuery(query).getDate("hire_date");
+            pstmt.close();
+            return hireDate;
         } catch (Exception e) {
             Terminal.exception(e);
         }
@@ -111,7 +121,9 @@ public class Trainer {
             String query = "SELECT trainer_id FROM trainers WHERE trainer_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, trainerId);
-            return pstmt.executeQuery(query).next();
+            boolean exists = pstmt.executeQuery(query).next();
+            pstmt.close();
+            return exists;
         } catch (Exception e) {
             Terminal.exception(e);
         }

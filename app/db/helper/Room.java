@@ -17,7 +17,9 @@ public class Room {
             String query = "SELECT location FROM rooms WHERE room_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, roomId);
-            return pstmt.executeQuery(query).getString("location");
+            String location = pstmt.executeQuery(query).getString("location");
+            pstmt.close();
+            return location;
         } catch (Exception e) {
             Terminal.exception(e);
         }
@@ -35,7 +37,9 @@ public class Room {
             String query = "SELECT room_id FROM rooms WHERE room_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, roomId);
-            return pstmt.executeQuery(query).next();
+            boolean exists = pstmt.executeQuery(query).next();
+            pstmt.close();
+            return exists;
         } catch (Exception e) {
             Terminal.exception(e);
         }
