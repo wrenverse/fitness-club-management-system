@@ -46,8 +46,8 @@ INSERT INTO fitness_goals (member_id, type_id, target_value, target_date, start_
 
 -- Health Metrics
 INSERT INTO health_metrics (member_id, timestamp, heart_rate, body_fat, weight, height) VALUES
-    (1, '2025-10-10 09:00', 72, 25.5, 70.0, 170.0),
-    (1, '2025-11-10 09:00', 70, 24.8, 68.5, 170.0);
+    (1, '2025-10-10 09:00', 72, 25.5, 70, 170),
+    (1, '2025-11-10 09:00', 70, 24.8, 68, 170);
 
 -- Insert Trainer Availability
 INSERT INTO trainer_availability (trainer_id, start_timestamp, end_timestamp, recurrences) VALUES
@@ -92,6 +92,7 @@ INSERT INTO invoice_items (invoice_id, item_num, item_type, quantity, unit_price
 -- Insert Payment
 INSERT INTO payments (invoice_id, amount_paid, method, payment_date) VALUES
     (1, 80.00, 'Credit Card', '2025-12-01');
+
 
 
 
