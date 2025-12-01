@@ -1,5 +1,6 @@
 import java.sql.*;
 import java.util.Calendar;
+import java.util.LinkedList;
 
 /**
  * Helper class to handle the trainer availibilty table in the database.
@@ -78,6 +79,26 @@ public class TrainerAvailibility {
     }
 
     /**
+     * Delete an availibility block by ID.
+     * @param conn The connection to the database.
+     * @param availibilityId The ID of the availibility block.
+     * @return True if successfully deleted, false otherwise.
+     */
+    public static boolean delete(Connection conn, Integer availibilityId) {
+        try {
+            String query = "DELETE FROM trainer_availibility WHERE availibility_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, availibilityId);
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (Exception e) {
+            Terminal.exception(e);
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Update the starting timestamp of an availibility block.
      * @param conn The connection to the database.
      * @param availibilityId The ID of the availibility block.
@@ -130,23 +151,26 @@ public class TrainerAvailibility {
     }
 
     /**
-     * Delete an availibility block by ID.
+     * Get the IDs of available personal training sessions of a trainer by ID.
      * @param conn The connection to the database.
-     * @param availibilityId The ID of the availibility block.
-     * @return True if successfully deleted, false otherwise.
+     * @param trainerId The ID of the trainer.
+     * @return The IDs of the available personal training sessions.
      */
-    public static boolean delete(Connection conn, Integer availibilityId) {
+    public static LinkedList<Integer> getAvailibilities(Connection conn, Integer trainerId) {
         try {
-            String query = "DELETE FROM trainer_availibility WHERE availibility_id = ?";
+            String query = "SELECT availibility_id FROM trainer_availibility WHERE trainer_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setInt(1, availibilityId);
-            pstmt.executeUpdate();
+            pstmt.setInt(1, trainerId);
+            ResultSet rs = pstmt.executeQuery(query);
+            LinkedList<Integer> ids = new LinkedList<>();
+            while (rs.next()) ids.add(rs.getInt("availibility_id"));
             pstmt.close();
+            rs.close();
+            return ids;
         } catch (Exception e) {
             Terminal.exception(e);
-            return false;
         }
-        return true;
+        return null;
     }
 
     /**
