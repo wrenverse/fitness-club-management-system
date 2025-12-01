@@ -23,7 +23,6 @@ INSERT INTO rooms (location) VALUES
 ('Weight Room'),
 ('Combatives Room');
 
-
 -- Insert Equipment
 INSERT INTO equipment (room_id, name, is_operational) VALUES
 (1, 'Yoga Mats', TRUE),
@@ -66,12 +65,10 @@ INSERT INTO pt_sessions (trainer_id, member_id, room_id, start_timestamp, end_ti
 (1, 2, 1, '2025-12-22 10:00', '2025-12-22 11:00');
 
 -- Insert Classes
-
 INSERT INTO classes (trainer_id, room_id, name, capacity, start_timestamp, end_timestamp) VALUES
     (1, 1, 'Morning Yoga',       20, '2025-12-20 07:00', '2025-12-22 08:00'),
     (3, 2, 'Evening HIIT',       25, '2025-12-22 18:00', '2025-01-22 18:45'),
     (2, 3, 'Strength Basics',    15, '2025-12-23 17:00', '2025-01-23 18:00');
-
 
 -- Insert Class Registrations
 INSERT INTO class_registration (class_id, member_id, register_date) VALUES
@@ -97,4 +94,5 @@ INSERT INTO invoice_items (invoice_id, item_num, item_type, quantity, unit_price
 
 INSERT INTO payments (invoice_id, amount_paid, method, payment_date) VALUES
     (1, 80.00, 'Credit Card', '2025-12-01');
+
 
