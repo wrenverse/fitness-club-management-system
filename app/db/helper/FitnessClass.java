@@ -203,4 +203,58 @@ public class FitnessClass {
         }
         return false;
     }
+
+    /**
+     * Get the starting timestamp of a class.
+     * @param conn The connection to the database.
+     * @param classId The ID of the class.
+     * @return The starting timestamp of the class.
+     */
+    public static Timestamp getStart(Connection conn, Integer classId) {
+        try {
+            String query = "SELECT start_timestamp FROM classes WHERE class_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, classId);
+            return pstmt.executeQuery(query).getTimestamp("start_timestamp");
+        } catch (Exception e) {
+            Terminal.exception(e);
+        }
+        return null;
+    }
+
+    /**
+     * Get the ending timestamp of a class.
+     * @param conn The connection to the database.
+     * @param classId The ID of the class.
+     * @return The ending timestamp of the class.
+     */
+    public static Timestamp getEnd(Connection conn, Integer classId) {
+        try {
+            String query = "SELECT end_timestamp FROM classes WHERE class_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, classId);
+            return pstmt.executeQuery(query).getTimestamp("end_timestamp");
+        } catch (Exception e) {
+            Terminal.exception(e);
+        }
+        return null;
+    }
+
+    /**
+     * Get the capacity of a class.
+     * @param conn The connection to the database.
+     * @param classId The ID of the class.
+     * @return The capacity of the class.
+     */
+    public static Integer getCapacity(Connection conn, Integer classId) {
+        try {
+            String query = "SELECT capacity FROM classes WHERE class_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, classId);
+            return pstmt.executeQuery(query).getInt("capacity");
+        } catch (Exception e) {
+            Terminal.exception(e);
+        }
+        return null;
+    }
 }

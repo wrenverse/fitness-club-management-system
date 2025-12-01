@@ -18,14 +18,34 @@ public class ClassRegistration {
         Integer memberId
     ) {
         try {
+            // Prevent registration to a full class.
             String query = """
+                SELECT COUNT(*)
+                    FROM class_registration
+                    WHERE member_id = ?
+                """;
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, memberId);
+            Integer classRegistrations = pstmt.executeUpdate();
+            pstmt.close();
+            if (classRegistrations >= FitnessClass.getCapacity(conn, classId)) return false;
+
+            // Prevent a member from registering for a conflicting class.
+            if (isConflicting(
+                conn,
+                memberId,
+                FitnessClass.getStart(conn, classId),
+                FitnessClass.getEnd(conn, classId)
+            ))
+                return false;
+            query = """
                 INSERT INTO class_registration (
                     class_id,
                     member_id,
                     register_date
                 ) VALUES (?, ?)
                 """;
-            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, classId);
             pstmt.setInt(2, memberId);
             pstmt.setDate(3, java.sql.Date.valueOf(java.time.LocalDate.now()));
