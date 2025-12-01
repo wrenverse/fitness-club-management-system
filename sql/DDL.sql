@@ -40,7 +40,7 @@ CREATE TABLE goal_types(
     unit            VARCHAR(20)
 );
 
-CREATE TABLE fitness_goal (
+CREATE TABLE fitness_goals (
     goal_id         SERIAL PRIMARY KEY,
     member_id       INT NOT NULL,
     type_id         INT NOT NULL,  
@@ -120,7 +120,7 @@ CREATE TABLE class_registration (
 
 -- Maintenance Tickets
 
-CREATE TABLE maintenance_ticket (
+CREATE TABLE maintenance_tickets (
     ticket_id       SERIAL PRIMARY KEY,
     equipment_id    INT,
     report_date     DATE NOT NULL,
@@ -132,7 +132,7 @@ CREATE TABLE maintenance_ticket (
 );
 
 -- Invoice, Invoice Items (weak entity), and Payments
-CREATE TABLE invoice (
+CREATE TABLE invoices (
     invoice_id      SERIAL PRIMARY KEY,
     member_id       INT NOT NULL,
     issue_timestamp TIMESTAMP NOT NULL,
@@ -163,3 +163,4 @@ CREATE TABLE payments (
     FOREIGN KEY (invoice_id)
         REFERENCES invoice(invoice_id)
 );
+
