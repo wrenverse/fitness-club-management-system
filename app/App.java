@@ -25,10 +25,10 @@ public class App {
     // The main function.
     public static void main(String[] args) {
 
+        Scanner sc = new Scanner(System.in);
         App app = new App();
 
         while(true) {
-            Scanner sc = new Scanner(System.in);
             Terminal.app("Please enter your database's hostname.");
             String host = sc.nextLine();
             Terminal.app("Please enter your database's port number.");
@@ -50,7 +50,15 @@ public class App {
             Terminal.app("Attempting login again...");
         }
 
-        System.out.println(Member.getName(app.db.getConnection(), 1));
-        
+        Controller controller = new Controller(app.db.getConnection());
+        CLI cli = new CLI(app.db.getConnection(), controller, sc);
+        cli.run();
+
+        try {
+            app.db.closeConnection();
+        } catch (Exception e) {
+            Terminal.exception(e);
+        }
+        sc.close();
     }
 }

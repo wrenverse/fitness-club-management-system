@@ -48,7 +48,4 @@ public class Database {
 
     // Close the database connection.
     public void closeConnection() throws SQLException { conn.close(); }
-
-    // Get the database connection.
-    public Connection getConnection() { return conn; }
 }
