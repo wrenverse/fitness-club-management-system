@@ -152,7 +152,7 @@ CREATE TABLE invoice_items (
     total_price     FLOAT NOT NULL,
     PRIMARY KEY (invoice_id, item_num),
     FOREIGN KEY (invoice_id)
-        REFERENCES invoice(invoice_id)
+        REFERENCES invoices(invoice_id)
 );
 
 CREATE TABLE payments (
@@ -162,8 +162,9 @@ CREATE TABLE payments (
     method          VARCHAR(20) NOT NULL,
     payment_date    DATE NOT NULL,
     FOREIGN KEY (invoice_id)
-        REFERENCES invoice(invoice_id)
+        REFERENCES invoices(invoice_id)
 );
+
 
 
 
