@@ -5,7 +5,7 @@ import java.util.*;
  */
 public class App {
 
-    private Database db;
+    Database db;
 
     public App() {
         db = new Database();
@@ -49,5 +49,8 @@ public class App {
             ) break;
             Terminal.app("Attempting login again...");
         }
+
+        System.out.println(Member.getName(app.db.getConnection(), 1));
+        
     }
 }
