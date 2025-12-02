@@ -1,6 +1,6 @@
 # Instructions
 
-1. Download and extract the ZIP file from this Github repository.
+1. Download and extract the ZIP file from this GitHub repository.
 2. Create a new empty PostgreSQL database.
 3. Populate the database using all files found in the folder `sql/`.
 4. Run the build script according to the operating system used.
@@ -12,4 +12,4 @@
 java -jar App.jar
 ```
 
-Demo: To be added!
+Demo: https://youtu.be/hNQsjbwlOzg
