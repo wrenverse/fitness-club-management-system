@@ -28,7 +28,7 @@ public class FitnessGoal {
         try {
             if (targetDate.before(startDate)) return false;
             String query = """
-                "INSERT INTO fitness_goals (
+                INSERT INTO fitness_goals (
                     member_id,
                     type_id,
                     target_value,
@@ -305,7 +305,30 @@ public class FitnessGoal {
                 SELECT goal_id FROM fitness_goals
                     WHERE member_id = ?
                         AND is_completed = FALSE
-                """;
+            """;
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, memberId);
+            ResultSet rs = pstmt.executeQuery();
+            LinkedList<Integer> ids = new LinkedList<>();
+            while (rs.next()) ids.add(rs.getInt("goal_id"));
+            pstmt.close();
+            rs.close();
+            return ids;
+        } catch (Exception e) {
+            Terminal.exception(e);
+        }
+        return null;
+    }
+
+    /**
+     * Get the IDs of goals of a member by ID.
+     * @param conn The connection to the database.
+     * @param memberId The ID of the member.
+     * @return The IDs of the goals.
+     */
+    public static LinkedList<Integer> getGoals(Connection conn, Integer memberId) {
+        try {
+            String query = "SELECT goal_id FROM fitness_goals WHERE member_id = ? ORDER BY target_date";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
             ResultSet rs = pstmt.executeQuery();
