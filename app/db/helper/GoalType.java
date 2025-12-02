@@ -14,7 +14,7 @@ public class GoalType {
     public static String getName(Connection conn, Integer typeId) {
         try {
             if (!exists(conn, typeId)) return null;
-            String query = "SELECT type_id FROM goal_types WHERE type_id = ?";
+            String query = "SELECT name FROM goal_types WHERE type_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, typeId);
             ResultSet rs = pstmt.executeQuery();

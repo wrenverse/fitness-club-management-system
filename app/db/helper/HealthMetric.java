@@ -212,7 +212,11 @@ public class HealthMetric {
      */
     public static LinkedList<Integer> getRecords(Connection conn, Integer memberId) {
         try {
-            String query = "SELECT metric_id FROM health_metrics WHERE member_id = ?";
+            String query = """
+                SELECT metric_id FROM health_metrics
+                    WHERE member_id = ?
+                    ORDER BY timestamp DESC
+                """;
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
             ResultSet rs = pstmt.executeQuery();
