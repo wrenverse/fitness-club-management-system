@@ -21,7 +21,7 @@ public class Controller {
         String email,
         String phone
     ) {
-        if (emailExists(email)) {
+        if (Member.emailExists(conn, email)) {
             Terminal.error("A member with that email already exists.");
             return false;
         }
@@ -43,19 +43,5 @@ public class Controller {
             Terminal.exception(e);
         }
         return null;
-    }
-
-    private boolean emailExists(String email) {
-        try {
-            String query = "SELECT 1 FROM members WHERE email = ?";
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setString(1, email);
-            boolean exists = pstmt.executeQuery().next();
-            pstmt.close();
-            return exists;
-        } catch (Exception e) {
-            Terminal.exception(e);
-        }
-        return false;
     }
 }

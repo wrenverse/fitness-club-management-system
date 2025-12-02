@@ -39,6 +39,10 @@ public class Database {
         return false;
     }
 
+    public Connection getConnection() {
+        return conn;
+    }
+
     // Check if the database connection is connected.
     public boolean connectionOpen() { return !(conn == null); }
 

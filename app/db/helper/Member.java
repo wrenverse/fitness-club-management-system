@@ -53,6 +53,26 @@ public class Member {
     }
 
     /**
+     * Check if an email already exists in the members table.
+     * @param conn The connection to the database.
+     * @param email The email to check.
+     * @return True if the email exists, false otherwise.
+     */
+    public static boolean emailExists(Connection conn, String email) {
+        try {
+            String query = "SELECT 1 FROM members WHERE email = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, email);
+            boolean exists = pstmt.executeQuery().next();
+            pstmt.close();
+            return exists;
+        } catch (Exception e) {
+            Terminal.exception(e);
+        }
+        return false;
+    }
+
+    /**
      * Update the name of a member.
      * @param conn The connection to the database.
      * @param memberId The ID of the member.
