@@ -179,8 +179,11 @@ public class Member {
             String query = "SELECT name FROM members WHERE member_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
-            String name = pstmt.executeQuery(query).getString("name");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            String name = rs.getString("name");
             pstmt.close();
+            rs.close();
             return name;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -200,8 +203,11 @@ public class Member {
             String query = "SELECT date_of_birth FROM members WHERE member_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
-            Date dob = pstmt.executeQuery(query).getDate("name");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Date dob = rs.getDate("date_of_birth");
             pstmt.close();
+            rs.close();
             return dob;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -221,8 +227,11 @@ public class Member {
             String query = "SELECT gender FROM members WHERE member_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
-            String gender = pstmt.executeQuery(query).getString("gender");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            String gender = rs.getString("gender");
             pstmt.close();
+            rs.close();
             return gender;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -242,8 +251,11 @@ public class Member {
             String query = "SELECT email FROM members WHERE member_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
-            String email = pstmt.executeQuery(query).getString("email");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            String email = rs.getString("email");
             pstmt.close();
+            rs.close();
             return email;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -263,8 +275,11 @@ public class Member {
             String query = "SELECT phone FROM members WHERE member_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
-            String phone = pstmt.executeQuery(query).getString("phone");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            String phone = rs.getString("phone");
             pstmt.close();
+            rs.close();
             return phone;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -284,8 +299,11 @@ public class Member {
             String query = "SELECT join_date FROM members WHERE member_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
-            Date date = pstmt.executeQuery(query).getDate("join_date");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Date date = rs.getDate("join_date");
             pstmt.close();
+            rs.close();
             return date;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -304,7 +322,7 @@ public class Member {
             String query = "SELECT member_id FROM members WHERE name = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setString(1, name);
-            ResultSet rs = pstmt.executeQuery(query);
+            ResultSet rs = pstmt.executeQuery();
             LinkedList<Integer> ids = new LinkedList<>();
             while (rs.next()) ids.add(rs.getInt("member_id"));
             pstmt.close();
@@ -327,8 +345,10 @@ public class Member {
             String query = "SELECT member_id FROM members WHERE member_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
-            boolean exists = pstmt.executeQuery(query).next();
+            ResultSet rs = pstmt.executeQuery();
+            boolean exists = rs.next();
             pstmt.close();
+            rs.close();
             return exists;
         } catch (Exception e) {
             Terminal.exception(e);

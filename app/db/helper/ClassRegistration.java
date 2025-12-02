@@ -110,7 +110,7 @@ public class ClassRegistration {
                 """;
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
-            ResultSet rs = pstmt.executeQuery(query);
+            ResultSet rs = pstmt.executeQuery();
 
             // Check each class for scheduling conflicts.
             while(rs.next()) {
@@ -119,6 +119,8 @@ public class ClassRegistration {
                 if (Utilities.overlaps(startTimestamp, endTimestamp, st, et))
                     return true;
             }
+            
+            rs.close();
 
         } catch (Exception e) {
             Terminal.exception(e);
@@ -145,8 +147,10 @@ public class ClassRegistration {
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, classId);
             pstmt.setInt(2, memberId);
-            boolean isRegistered = pstmt.executeQuery(query).next();
+            ResultSet rs = pstmt.executeQuery();
+            boolean isRegistered = rs.next();
             pstmt.close();
+            rs.close();
             return isRegistered;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -173,8 +177,11 @@ public class ClassRegistration {
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, classId);
             pstmt.setInt(2, memberId);
-            Date date = pstmt.executeQuery(query).getDate("register_date");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Date date = rs.getDate("register_date");
             pstmt.close();
+            rs.close();
             return date;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -193,7 +200,7 @@ public class ClassRegistration {
             String query = "SELECT class_id FROM class_registration WHERE member_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
-            ResultSet rs = pstmt.executeQuery(query);
+            ResultSet rs = pstmt.executeQuery();
             LinkedList<Integer> ids = new LinkedList<>();
             while (rs.next()) ids.add(rs.getInt("class_id"));
             pstmt.close();
@@ -216,7 +223,7 @@ public class ClassRegistration {
             String query = "SELECT member_id FROM class_registration WHERE class_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, classId);
-            ResultSet rs = pstmt.executeQuery(query);
+            ResultSet rs = pstmt.executeQuery();
             LinkedList<Integer> ids = new LinkedList<>();
             while (rs.next()) ids.add(rs.getInt("member_id"));
             pstmt.close();

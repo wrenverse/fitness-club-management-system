@@ -17,7 +17,10 @@ public class Trainer {
             String query = "SELECT name FROM trainers WHERE trainer_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, trainerId);
-            String name = pstmt.executeQuery(query).getString("name");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            String name = rs.getString("name");
+            rs.close();
             pstmt.close();
             return name;
         } catch (Exception e) {
@@ -38,8 +41,11 @@ public class Trainer {
             String query = "SELECT email FROM trainers WHERE trainer_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, trainerId);
-            String email = pstmt.executeQuery(query).getString("email");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            String email = rs.getString("email");
             pstmt.close();
+            rs.close();
             return email;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -59,8 +65,11 @@ public class Trainer {
             String query = "SELECT phone FROM trainers WHERE trainer_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, trainerId);
-            String phone = pstmt.executeQuery(query).getString("phone");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            String phone = rs.getString("phone");
             pstmt.close();
+            rs.close();
             return phone;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -80,8 +89,11 @@ public class Trainer {
             String query = "SELECT specialization FROM trainers WHERE trainer_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, trainerId);
-            String specialization = pstmt.executeQuery(query).getString("specialization");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            String specialization = rs.getString("specialization");
             pstmt.close();
+            rs.close();
             return specialization;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -101,8 +113,11 @@ public class Trainer {
             String query = "SELECT hire_date FROM trainers WHERE trainer_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, trainerId);
-            Date hireDate = pstmt.executeQuery(query).getDate("hire_date");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Date hireDate = rs.getDate("hire_date");
             pstmt.close();
+            rs.close();
             return hireDate;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -121,7 +136,8 @@ public class Trainer {
             String query = "SELECT trainer_id FROM trainers WHERE trainer_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, trainerId);
-            boolean exists = pstmt.executeQuery(query).next();
+            ResultSet rs = pstmt.executeQuery();
+            boolean exists = rs.next();
             pstmt.close();
             return exists;
         } catch (Exception e) {

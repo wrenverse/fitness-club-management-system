@@ -129,8 +129,11 @@ public class Equipment {
             String query = "SELECT room_id FROM equipment WHERE equipment = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, equipmentId);
-            Integer id = pstmt.executeQuery(query).getInt("room_id");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Integer id = rs.getInt("room_id");
             pstmt.close();
+            rs.close();
             return id;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -150,8 +153,11 @@ public class Equipment {
             String query = "SELECT name FROM equipment WHERE equipment_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, equipmentId);
-            String name = pstmt.executeQuery(query).getString("name");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            String name = rs.getString("name");
             pstmt.close();
+            rs.close();
             return name;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -171,8 +177,11 @@ public class Equipment {
             String query = "SELECT is_operational FROM equipment WHERE equipment_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, equipmentId);
-            boolean isOperational = pstmt.executeQuery(query).getBoolean("is_operational");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            boolean isOperational = rs.getBoolean("is_operational");
             pstmt.close();
+            rs.close();
             return isOperational;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -191,8 +200,10 @@ public class Equipment {
             String query = "SELECT equipment_id FROM equipment WHERE equipment_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, equipmentId);
-            boolean exists = pstmt.executeQuery(query).next();
+            ResultSet rs = pstmt.executeQuery();
+            boolean exists = rs.next();
             pstmt.close();
+            rs.close();
             return exists;
         } catch (Exception e) {
             Terminal.exception(e);

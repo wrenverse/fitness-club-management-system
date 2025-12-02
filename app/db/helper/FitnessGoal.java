@@ -185,8 +185,11 @@ public class FitnessGoal {
             String query = "SELECT type_id FROM fitness_goals WHERE goal_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, goalId);
-            Integer id = pstmt.executeQuery(query).getInt("type_id");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Integer id = rs.getInt("type_id");
             pstmt.close();
+            rs.close();
             return id;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -206,8 +209,11 @@ public class FitnessGoal {
             String query = "SELECT target_value FROM fitness_goals WHERE goal_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, goalId);
-            Float amount = pstmt.executeQuery(query).getFloat("target_value");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Float amount = rs.getFloat("target_value");
             pstmt.close();
+            rs.close();
             return amount;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -227,8 +233,11 @@ public class FitnessGoal {
             String query = "SELECT target_date FROM fitness_goals WHERE goal_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, goalId);
-            Date date = pstmt.executeQuery(query).getDate("target_date");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Date date = rs.getDate("target_date");
             pstmt.close();
+            rs.close();
             return date;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -248,8 +257,11 @@ public class FitnessGoal {
             String query = "SELECT start_date FROM fitness_goals WHERE goal_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, goalId);
-            Date date = pstmt.executeQuery(query).getDate("start_date");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Date date = rs.getDate("start_date");
             pstmt.close();
+            rs.close();
             return date;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -269,8 +281,11 @@ public class FitnessGoal {
             String query = "SELECT is_completed FROM fitness_goals WHERE goal_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, goalId);
-            boolean isCompleted = pstmt.executeQuery(query).getBoolean("is_completed");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            boolean isCompleted = rs.getBoolean("is_completed");
             pstmt.close();
+            rs.close();
             return isCompleted;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -293,7 +308,7 @@ public class FitnessGoal {
                 """;
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
-            ResultSet rs = pstmt.executeQuery(query);
+            ResultSet rs = pstmt.executeQuery();
             LinkedList<Integer> ids = new LinkedList<>();
             while (rs.next()) ids.add(rs.getInt("goal_id"));
             pstmt.close();
@@ -316,8 +331,10 @@ public class FitnessGoal {
             String query = "SELECT goal_id FROM fitness_goals WHERE goal_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, goalId);
-            boolean exists = pstmt.executeQuery(query).next();
+            ResultSet rs = pstmt.executeQuery();
+            boolean exists = rs.next();
             pstmt.close();
+            rs.close();
             return exists;
         } catch (Exception e) {
             Terminal.exception(e);

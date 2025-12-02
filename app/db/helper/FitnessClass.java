@@ -199,8 +199,11 @@ public class FitnessClass {
             String query = "SELECT name FROM classes WHERE class_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, classId);
-            String name = pstmt.executeQuery(query).getString("name");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            String name = rs.getString("name");
             pstmt.close();
+            rs.close();
             return name;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -220,7 +223,12 @@ public class FitnessClass {
             String query = "SELECT capacity FROM classes WHERE class_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, classId);
-            return pstmt.executeQuery(query).getInt("capacity");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Integer capacity = rs.getInt("capacity");
+            pstmt.close();
+            rs.close();
+            return capacity;
         } catch (Exception e) {
             Terminal.exception(e);
         }
@@ -239,7 +247,12 @@ public class FitnessClass {
             String query = "SELECT start_timestamp FROM classes WHERE class_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, classId);
-            return pstmt.executeQuery(query).getTimestamp("start_timestamp");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Timestamp ts = rs.getTimestamp("start_tinestamp");
+            pstmt.close();
+            rs.close();
+            return ts;
         } catch (Exception e) {
             Terminal.exception(e);
         }
@@ -258,7 +271,12 @@ public class FitnessClass {
             String query = "SELECT end_timestamp FROM classes WHERE class_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, classId);
-            return pstmt.executeQuery(query).getTimestamp("end_timestamp");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Timestamp ts = rs.getTimestamp("end_timestamp");
+            pstmt.close();
+            rs.close();
+            return ts;
         } catch (Exception e) {
             Terminal.exception(e);
         }
@@ -293,7 +311,7 @@ public class FitnessClass {
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
             pstmt.setInt(2, roomId);
-            ResultSet rs = pstmt.executeQuery(query);
+            ResultSet rs = pstmt.executeQuery();
 
             // Check each class for scheduling conflicts.
             while(rs.next()) {
@@ -302,6 +320,8 @@ public class FitnessClass {
                 if (Utilities.overlaps(startTimestamp, endTimestamp, st, et))
                     return true;
             }
+
+            rs.close();
 
         } catch (Exception e) {
             Terminal.exception(e);
@@ -321,8 +341,10 @@ public class FitnessClass {
             String query = "SELECT class_id FROM classes WHERE class_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, classId);
-            boolean exists = pstmt.executeQuery(query).next();
+            ResultSet rs = pstmt.executeQuery();
+            boolean exists = rs.next();
             pstmt.close();
+            rs.close();
             return exists;
         } catch (Exception e) {
             Terminal.exception(e);

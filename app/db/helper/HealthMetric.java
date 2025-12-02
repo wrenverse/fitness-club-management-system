@@ -65,8 +65,11 @@ public class HealthMetric {
             String query = "SELECT timestamp FROM health_metrics WHERE metric_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, metricId);
-            Timestamp ts = pstmt.executeQuery(query).getTimestamp("timestamp");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Timestamp ts = rs.getTimestamp("timestamp");
             pstmt.close();
+            rs.close();
             return ts;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -86,8 +89,11 @@ public class HealthMetric {
             String query = "SELECT heart_rate FROM health_metrics WHERE metric_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, metricId);
-            Integer hr = pstmt.executeQuery(query).getInt("heart_rate");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Integer hr = rs.getInt("heart_rate");
             pstmt.close();
+            rs.close();
             return hr;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -107,8 +113,11 @@ public class HealthMetric {
             String query = "SELECT body_fat FROM health_metrics WHERE metric_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, metricId);
-            Float bfp = pstmt.executeQuery(query).getFloat("body_fat");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Float bfp = rs.getFloat("body_fat");
             pstmt.close();
+            rs.close();
             return bfp;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -128,8 +137,11 @@ public class HealthMetric {
             String query = "SELECT weight FROM health_metrics WHERE metric_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, metricId);
-            Integer weight = pstmt.executeQuery(query).getInt("weight");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Integer weight = rs.getInt("weight");
             pstmt.close();
+            rs.close();
             return weight;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -149,8 +161,11 @@ public class HealthMetric {
             String query = "SELECT height FROM health_metrics WHERE metric_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, metricId);
-            Integer height = pstmt.executeQuery(query).getInt("height");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Integer height = rs.getInt("height");
             pstmt.close();
+            rs.close();
             return height;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -177,8 +192,11 @@ public class HealthMetric {
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
             pstmt.setInt(2, memberId);
-            Integer id = pstmt.executeQuery(query).getInt("metric_id");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Integer id = rs.getInt("metric_id");
             pstmt.close();
+            rs.close();
             return id;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -197,7 +215,7 @@ public class HealthMetric {
             String query = "SELECT metric_id FROM health_metrics WHERE member_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
-            ResultSet rs = pstmt.executeQuery(query);
+            ResultSet rs = pstmt.executeQuery();
             LinkedList<Integer> ids = new LinkedList<>();
             while (rs.next()) ids.add(rs.getInt("metric_id"));
             pstmt.close();
@@ -220,8 +238,10 @@ public class HealthMetric {
             String query = "SELECT metric_id FROM health_metrics WHERE metric_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, metricId);
-            boolean exists = pstmt.executeQuery(query).next();
+            ResultSet rs = pstmt.executeQuery();
+            boolean exists = rs.next();
             pstmt.close();
+            rs.close();
             return exists;
         } catch (Exception e) {
             Terminal.exception(e);

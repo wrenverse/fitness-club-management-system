@@ -56,8 +56,11 @@ public class Payment {
             String query = "SELECT invoice_id FROM payments WHERE payment_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, paymentId);
-            Integer id = pstmt.executeQuery(query).getInt("invoice_id");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Integer id = rs.getInt("invoice_id");
             pstmt.close();
+            rs.close();
             return id;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -77,8 +80,11 @@ public class Payment {
             String query = "SELECT amount_paid FROM payments WHERE payment_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, paymentId);
-            Float amount = pstmt.executeQuery(query).getFloat("amount_paid");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Float amount = rs.getFloat("amount_paid");
             pstmt.close();
+            rs.close();
             return amount;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -98,8 +104,11 @@ public class Payment {
             String query = "SELECT method FROM payments WHERE payment_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, paymentId);
-            String method = pstmt.executeQuery(query).getString("method");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            String method = rs.getString("method");
             pstmt.close();
+            rs.close();
             return method;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -119,8 +128,11 @@ public class Payment {
             String query = "SELECT payment_date FROM payments WHERE payment_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, paymentId);
-            Date date = pstmt.executeQuery(query).getDate("payment_date");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Date date = rs.getDate("payment_date");
             pstmt.close();
+            rs.close();
             return date;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -139,7 +151,7 @@ public class Payment {
             String query = "SELECT payment_id FROM payments WHERE member_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, memberId);
-            ResultSet rs = pstmt.executeQuery(query);
+            ResultSet rs = pstmt.executeQuery();
             LinkedList<Integer> ids = new LinkedList<>();
             while (rs.next()) ids.add(rs.getInt("payment_id"));
             pstmt.close();
@@ -162,8 +174,10 @@ public class Payment {
             String query = "SELECT payment_id FROM payments WHERE payment_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, paymentId);
-            boolean exists = pstmt.executeQuery(query).next();
+            ResultSet rs = pstmt.executeQuery();
+            boolean exists = rs.next();
             pstmt.close();
+            rs.close();
             return exists;
         } catch (Exception e) {
             Terminal.exception(e);

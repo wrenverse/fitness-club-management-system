@@ -17,8 +17,11 @@ public class GoalType {
             String query = "SELECT type_id FROM goal_types WHERE type_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, typeId);
-            String name = pstmt.executeQuery(query).getString("name");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            String name = rs.getString("name");
             pstmt.close();
+            rs.close();
             return name;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -38,8 +41,11 @@ public class GoalType {
             String query = "SELECT unit FROM goal_types WHERE type_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, typeId);
-            String unit = pstmt.executeQuery(query).getString("unit");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            String unit = rs.getString("unit");
             pstmt.close();
+            rs.close();
             return unit;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -58,8 +64,10 @@ public class GoalType {
             String query = "SELECT type_id FROM goal_types WHERE type_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, typeId);
-            boolean exists = pstmt.executeQuery(query).next();
+            ResultSet rs = pstmt.executeQuery();
+            boolean exists = rs.next();
             pstmt.close();
+            rs.close();
             return exists;
         } catch (Exception e) {
             Terminal.exception(e);

@@ -104,7 +104,7 @@ public class PTSession {
                     """;
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, id);
-            ResultSet rs = pstmt.executeQuery(query);
+            ResultSet rs = pstmt.executeQuery();
 
             // Check each personal training session for scheduling conflicts.
             while(rs.next()) {
@@ -113,6 +113,8 @@ public class PTSession {
                 if (Utilities.overlaps(startTimestamp, endTimestamp, st, et))
                     return true;
             }
+
+            rs.close();
 
         } catch (Exception e) {
             Terminal.exception(e);

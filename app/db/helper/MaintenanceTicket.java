@@ -124,8 +124,11 @@ public class MaintenanceTicket {
             String query = "SELECT equipment_id FROM maintenance_tickets WHERE ticket_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, ticketId);
-            Integer id = pstmt.executeQuery(query).getInt("equipment_id");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Integer id = rs.getInt("equipment_id");
             pstmt.close();
+            rs.close();
             return id;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -145,8 +148,11 @@ public class MaintenanceTicket {
             String query = "SELECT report_date FROM maintenance_tickets WHERE ticket_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, ticketId);
-            Date date = pstmt.executeQuery(query).getDate("report_date");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Date date = rs.getDate("report_date");
             pstmt.close();
+            rs.close();
             return date;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -166,9 +172,12 @@ public class MaintenanceTicket {
             String query = "SELECT description FROM maintenance_tickets WHERE ticket_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, ticketId);
-            String gender = pstmt.executeQuery(query).getString("description");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            String description = rs.getString("description");
             pstmt.close();
-            return gender;
+            rs.close();
+            return description;
         } catch (Exception e) {
             Terminal.exception(e);
         }
@@ -187,8 +196,11 @@ public class MaintenanceTicket {
             String query = "SELECT being_repaired FROM maintenance_tickets WHERE ticket_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, ticketId);
-            boolean isOperational = pstmt.executeQuery(query).getBoolean("being_repaired");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            boolean isOperational = rs.getBoolean("being_repaired");
             pstmt.close();
+            rs.close();
             return isOperational;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -208,8 +220,11 @@ public class MaintenanceTicket {
             String query = "SELECT is_repaired FROM maintenance_tickets WHERE ticket_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, ticketId);
-            boolean isOperational = pstmt.executeQuery(query).getBoolean("is_repaired");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            boolean isOperational = rs.getBoolean("is_repaired");
             pstmt.close();
+            rs.close();
             return isOperational;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -230,8 +245,11 @@ public class MaintenanceTicket {
             String query = "SELECT resolved_date FROM maintenance_tickets WHERE ticket_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, ticketId);
-            Date date = pstmt.executeQuery(query).getDate("resolved_date");
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            Date date = rs.getDate("resolved_date");
             pstmt.close();
+            rs.close();
             return date;
         } catch (Exception e) {
             Terminal.exception(e);
@@ -248,7 +266,7 @@ public class MaintenanceTicket {
         try {
             String query = "SELECT ticket_id FROM maintenance_tickets";
             PreparedStatement pstmt = conn.prepareStatement(query);
-            ResultSet rs = pstmt.executeQuery(query);
+            ResultSet rs = pstmt.executeQuery();
             LinkedList<Integer> ids = new LinkedList<>();
             while (rs.next()) ids.add(rs.getInt("ticket_id"));
             pstmt.close();
@@ -271,7 +289,8 @@ public class MaintenanceTicket {
             String query = "SELECT ticket_id FROM maintenance_tickets WHERE ticket_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, ticketId);
-            boolean exists = pstmt.executeQuery(query).next();
+            ResultSet rs = pstmt.executeQuery();
+            boolean exists = rs.next();
             pstmt.close();
             return exists;
         } catch (Exception e) {

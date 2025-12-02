@@ -161,7 +161,7 @@ public class TrainerAvailibility {
             String query = "SELECT availibility_id FROM trainer_availibility WHERE trainer_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, trainerId);
-            ResultSet rs = pstmt.executeQuery(query);
+            ResultSet rs = pstmt.executeQuery();
             LinkedList<Integer> ids = new LinkedList<>();
             while (rs.next()) ids.add(rs.getInt("availibility_id"));
             pstmt.close();
@@ -197,7 +197,7 @@ public class TrainerAvailibility {
                 """;
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, trainerId);
-            ResultSet rs = pstmt.executeQuery(query);
+            ResultSet rs = pstmt.executeQuery();
 
             // Check each availibility block for scheduling conflicts.
             while(rs.next()) {
@@ -206,6 +206,8 @@ public class TrainerAvailibility {
                 if (Utilities.overlaps(startTimestamp, endTimestamp, st, et))
                     return true;
             }
+
+            rs.close();
 
         } catch (Exception e) {
             Terminal.exception(e);
